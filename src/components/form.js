@@ -9,7 +9,7 @@ function Form() {
   });
 
   const [tableData, setTableData] = useState([]);
-
+ 
   useEffect(() => {
     const savedData = JSON.parse(localStorage.getItem("data") || "[]");
     setTableData(savedData);
@@ -45,13 +45,19 @@ function Form() {
       category: "",
     });
     alert("Data is successfully saved in local storage");
-
-    
-    
-    
   };
 
+  const handleDelete = (e) => {
+    const id = parseInt(e.target.id, 10); 
+    const updatedData = tableData.filter((_, index) => index !== id); 
+    setTableData(updatedData); 
+    localStorage.setItem("data", JSON.stringify(updatedData)); 
+  };
+  
+
+
   return (
+    
 <div className="flex flex-col items-center p-6 bg-gray-50 min-h-screen">
   <form
     className="w-full max-w-md flex flex-col justify-center items-center border border-gray-300 p-8 rounded-lg shadow-xl bg-gray-700 text-white mb-8"
@@ -89,8 +95,7 @@ function Form() {
       placeholder="Enter the title"
       className="w-full p-3 mb-4 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
       value={formdata.title}
-      onChange={getTitle}
-      
+      onChange={getTitle} 
     />
 
     <label htmlFor="category" className="w-full mb-2 text-gray-300 font-semibold">
@@ -121,37 +126,6 @@ function Form() {
     </button>
   </form>
 
-  <table className="table-auto border-collapse border border-gray-300 w-full max-w-2xl text-left mb-8 ">
-    <thead>
-      <tr className="bg-gray-700">
-        <th className="border border-gray-300 px-6 py-4 text-lg font-medium text-white">Price</th>
-        <th className="border border-gray-300 px-6 py-4 text-lg font-medium text-white">Date</th>
-        <th className="border border-gray-300 px-6 py-4 text-lg font-medium text-white">Title</th>
-        <th className="border border-gray-300 px-6 py-4 text-lg font-medium text-white">Category</th>
-      </tr>
-    </thead>
-    <tbody>
-      {tableData.length > 0 ? (
-        tableData.map((item, index) => (
-          <tr key={index} className="hover:bg-blue-100 transition">
-            <td className="border border-gray-300 px-6 py-4 text-gray-700">{item.price}</td>
-            <td className="border border-gray-300 px-6 py-4 text-gray-700">{item.date}</td>
-            <td className="border border-gray-300 px-6 py-4 text-gray-700">{item.title}</td>
-            <td className="border border-gray-300 px-6 py-4 text-gray-700">{item.category}</td>
-          </tr>
-        ))
-      ) : (
-        <tr>
-          <td
-            colSpan="4"
-            className="border border-gray-300 px-6 py-4 text-center text-gray-700 font-medium"
-          >
-            No data available
-          </td>
-        </tr>
-      )}
-    </tbody>
-  </table>
 </div>
   )
 }
