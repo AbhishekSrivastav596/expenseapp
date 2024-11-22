@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate,Navigate } from 'react-router-dom';
 
-function DataPage() {
-  const [tableData, setTableData] = useState([]);
+function DataPage({setValue}) {
+  const Navigate = useNavigate();
+  const [tableData, setTableData] = useState(JSON.parse(localStorage.getItem('data') || '[]'));
+  
 
-  useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem('data') || '[]');
-    setTableData(savedData);
-  }, []);
+  
 
   const handleDelete = (e) => {
     const id = parseInt(e.target.id, 10);
@@ -15,13 +16,21 @@ function DataPage() {
     setTableData(updatedData);
     // console.log(updatedData);
     localStorage.setItem("data", JSON.stringify(updatedData));
+    toast.success("Data has been successfully deleted!")
     
+  };
+
+  const handleEdit = (index) => { 
+    setValue(index);
+    console.log(index);
+     Navigate('/');
+     
   };
   
 
   return (
     <div className="flex flex-col items-center p-6 bg-gray-50 min-h-screen">
-      <h3 className="text-2xl font-bold text-blue-400 mb-6">View Your Expenses</h3>
+      <h3 className="text-2xl font-bold text-blue-600 mb-6">View Your Expenses</h3>
       <table className="table-auto border-collapse border border-gray-300 w-full max-w-2xl text-left mb-8">
         <thead>
           <tr className="bg-gray-700">
@@ -30,6 +39,7 @@ function DataPage() {
             <th className="border border-gray-300 px-6 py-4 text-lg font-medium text-white">Title</th>
             <th className="border border-gray-300 px-6 py-4 text-lg font-medium text-white">Category</th>
             <th className="border border-gray-300 px-6 py-4 text-lg font-medium text-white">Delete</th>
+            <th className="border border-gray-300 px-6 py-4 text-lg font-medium text-white">Edit</th>
           </tr>
         </thead>
     <tbody>
@@ -48,7 +58,10 @@ function DataPage() {
           >
             Delete
           </button>
+       
+          
         </td>
+        <td className="border border-gray-300 px-6 py-4 text-center"><button className="bg-green-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-blue-500 transition" onClick={()=>handleEdit(index)} >Edit</button></td>
       </tr>
     ))
   ) : (

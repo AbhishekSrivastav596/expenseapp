@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from "react";
+import {toast} from "react-hot-toast";
 
-function Form() {
+function Form({value}) {
   const [formdata, setformdata] = useState({
     price: "",
     date: "",
     title: "",
     category: "",
   });
+  console.log("form page par index of the row",value);
+  const [tableData, setTableData] = useState( JSON.parse(localStorage.getItem("data") || "[]"));
+  useEffect(()=>{
+    if(value > -1){
+    const prefilled = JSON.parse(localStorage.getItem("data") || "[]");
+    console.log(prefilled[value]);
+    setformdata(prefilled[value]);
+  }
+  }, [value])
+  
 
-  const [tableData, setTableData] = useState([]);
- 
-  useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem("data") || "[]");
-    setTableData(savedData);
-  }, []);
 
   const setPrice = (e) => {
     setformdata({ ...formdata, price: e.target.value });
@@ -32,8 +37,12 @@ function Form() {
   const saveData = (e) => {
     e.preventDefault();
     let prevdata = JSON.parse(localStorage.getItem("data") || "[]");
-
-    prevdata.push(formdata);
+    if(value > -1){
+      prevdata[value] = formdata;
+    }
+    else{
+      prevdata.push(formdata);
+    }
     localStorage.setItem("data", JSON.stringify(prevdata));
 
     setTableData(prevdata); 
@@ -44,23 +53,18 @@ function Form() {
       title: "",
       category: "",
     });
-    alert("Data is successfully saved in local storage");
+    toast.success("Your data has been saved successfully!")
   };
 
-  const handleDelete = (e) => {
-    const id = parseInt(e.target.id, 10); 
-    const updatedData = tableData.filter((_, index) => index !== id); 
-    setTableData(updatedData); 
-    localStorage.setItem("data", JSON.stringify(updatedData)); 
-  };
+  
   
 
 
   return (
     
-<div className="flex flex-col items-center p-6 bg-gray-50 min-h-screen">
+<div className="flex flex-col items-center p-2 bg-gray-50 min-h-screen">
   <form
-    className="w-full max-w-md flex flex-col justify-center items-center border border-gray-300 p-8 rounded-lg shadow-xl bg-gray-700 text-white mb-8"
+    className="w-full max-w-md flex flex-col justify-center items-center border border-gray-300 p-8 rounded-lg shadow-xl bg-gray-700 text-white "
     onSubmit={saveData}
   >
     <h3 className="text-2xl font-bold text-blue-400 mb-6">Your Expenses</h3>
@@ -82,6 +86,7 @@ function Form() {
     <input
       type="date"
       className="w-full p-3 mb-4 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+      
       value={formdata.date}
       onChange={getDate}
     />
@@ -117,13 +122,10 @@ function Form() {
       <option value="Personal">Personal</option>
 
     </select>
-
-    <button
-      type="submit"
-      className="w-1/4 p-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition"
-    >
-      Submit
-    </button>
+    
+  <button type="submit" className="w-1/4 p-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition" >Submit</button>
+      
+     
   </form>
 
 </div>
