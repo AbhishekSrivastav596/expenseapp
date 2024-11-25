@@ -6,9 +6,6 @@ function DataPage({setValue}) {
   const Navigate = useNavigate();
   const [tableData, setTableData] = useState(JSON.parse(localStorage.getItem('data') || '[]'));
   
-
-  
-
   const handleDelete = (e) => {
     const id = parseInt(e.target.id, 10);
     console.log(id);
@@ -16,8 +13,8 @@ function DataPage({setValue}) {
     setTableData(updatedData);
     // console.log(updatedData);
     localStorage.setItem("data", JSON.stringify(updatedData));
-    toast.success("Data has been successfully deleted!")
-    
+    toast.success("Data has been successfully deleted!");
+    setValue(-1);       //setting value again to initial state(-1), so that inputs become empty when we delete currently being edited data
   };
 
   const handleEdit = (index) => { 
@@ -25,7 +22,11 @@ function DataPage({setValue}) {
     console.log(index);
      Navigate('/');
      
+
   };
+  console.log("tableData",tableData);
+  console.log(typeof tableData);
+  
   
 
   return (
@@ -54,7 +55,7 @@ function DataPage({setValue}) {
           <button
             id={index} 
             onClick={handleDelete} 
-            className="bg-red-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-red-600 transition"
+            className="bg-red-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-blue-500 transition"
           >
             Delete
           </button>

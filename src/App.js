@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link, BrowserRouter } from 'react-router-dom';
 import './App.css';
 import Form from './components/Form';
 import DataPage from './components/DataPage';
@@ -14,7 +14,7 @@ function App() {
     <>
     <Router>
       <div>
-       <Toaster position="top-right" />
+       <Toaster position="top-center" />
       <nav className="bg-gray-800 text-white p-4 sticky top-0">
           <div className="flex justify-between items-center"> 
         <div className="text-lg font-bold">
@@ -31,7 +31,7 @@ function App() {
         </div>
       </nav>       
         <Routes>
-          <Route path="/" element={<Form value={value}/>} />
+          <Route path="/" element={<Form value={value}/>}/>
           <Route path="/view-data" element={<DataPage setValue={setvalue}/>} />
         </Routes>
       </div>

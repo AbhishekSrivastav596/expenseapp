@@ -14,15 +14,15 @@ function Form({value}) {
     if(value > -1){
     const prefilled = JSON.parse(localStorage.getItem("data") || "[]");
     console.log(prefilled[value]);
-    setformdata(prefilled[value]);
+    if(prefilled[value]!==undefined){
+      setformdata(prefilled[value]);
+    }
   }
   }, [value])
   
-
-
+  
   const setPrice = (e) => {
     setformdata({ ...formdata, price: e.target.value });
-    
   };
   const getDate = (e) => {
     setformdata({ ...formdata, date: e.target.value });
@@ -76,7 +76,7 @@ function Form({value}) {
       id="price"
       placeholder="Enter the price"
       value={formdata.price}
-      onChange={setPrice}
+      onChange={setPrice} required
       className="w-full p-3 mb-4 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
     />
 
@@ -86,7 +86,7 @@ function Form({value}) {
     <input
       type="date"
       className="w-full p-3 mb-4 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-      
+      required
       value={formdata.date}
       onChange={getDate}
     />
@@ -100,6 +100,7 @@ function Form({value}) {
       placeholder="Enter the title"
       className="w-full p-3 mb-4 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
       value={formdata.title}
+      required
       onChange={getTitle} 
     />
 
