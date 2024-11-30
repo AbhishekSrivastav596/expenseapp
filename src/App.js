@@ -1,41 +1,70 @@
-import { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link, BrowserRouter } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Link, BrowserRouter, useNavigate, Navigate } from 'react-router-dom';
 import './App.css';
 import Form from './components/Form';
 import DataPage from './components/DataPage';
-import {Toaster} from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
+  // const Navigate = useNavigate();
+  const [value, setvalue] = useState(-1);
+  const [tableData, setTableData] = useState([]);
+  
+  const [formdata, setformdata] = useState({
+    price: "",
+    date: "",
+    title: "",
+    category: "",
+  });
+  const prevdata = [...tableData];   //removing dependency of localStorage
+  let prefilled = prevdata;
 
-  const [value,setvalue] = useState(-1);
-  // console.log("value",value);
-  // console.log("setvalue", setvalue);
+  (useEffect(() => {
+    if (value > -1) {
+      // const prefilled = JSON.parse(localStorage.getItem("data") || "[]");
+      console.log("prefilled", prefilled);
+      console.log(typeof prefilled);
+
+      console.log("prevdata", prevdata);
+      console.log(typeof prevdata);
+      
+      console.log(prefilled[value]);
+      if (prefilled[value] !== undefined) {
+        setformdata(prefilled[value]);
+      }
+      console.log("hello");
+
+
+    }
+  }, [value]))
+ 
+
   return (
     <>
-    <Router>
-      <div>
-       <Toaster position="top-center" />
-      <nav className="bg-gray-800 text-white p-4 sticky top-0">
-          <div className="flex justify-between items-center"> 
-        <div className="text-lg font-bold">
-          Expensify
+      <Router>
+        <div>
+          <Toaster position="top-center" />
+          <nav className="bg-gray-800 text-white p-4 sticky top-0">
+            <div className="flex justify-between items-center">
+              <div className="text-lg font-bold">
+                Expensify
+              </div>
+              <ul className="flex space-x-6">
+                <li>
+                  <Link to="/" className="text-blue-400 hover:text-white">Home</Link>
+                </li>
+                <li>
+                  <Link to="/view-data" className="text-blue-400 hover:text-white">View Data</Link>
+                </li>
+              </ul>
+            </div>
+          </nav>
+          <Routes>
+            <Route path="/" element={<Form value={value} setValue={setvalue} tableData={tableData} setTableData={setTableData} prevdata={prevdata} formdata={formdata} setformdata={setformdata} />} />
+            <Route path="/view-data" element={<DataPage  setValue={setvalue} tableData={tableData} setTableData={setTableData} prevdata={prevdata} formdata={formdata} setformdata={setformdata} />} />
+          </Routes>
         </div>
-        <ul className="flex space-x-6">
-          <li>
-            <Link to="/" className="text-blue-400 hover:text-white">Home</Link>
-          </li>
-          <li>
-            <Link to="/view-data" className="text-blue-400 hover:text-white">View Data</Link>
-          </li>
-          </ul>
-        </div>
-      </nav>       
-        <Routes>
-          <Route path="/" element={<Form value={value}/>}/>
-          <Route path="/view-data" element={<DataPage setValue={setvalue}/>} />
-        </Routes>
-      </div>
-    </Router>
+      </Router>
 
     </>
   );

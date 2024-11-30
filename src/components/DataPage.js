@@ -1,31 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import { useNavigate,Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-function DataPage({setValue}) {
+function DataPage({setValue,setnewStateData,newStateData,tableData,setTableData,prevdata,formdata,setformdata}) {
   const Navigate = useNavigate();
-  const [tableData, setTableData] = useState(JSON.parse(localStorage.getItem('data') || '[]'));
-  
+
   const handleDelete = (e) => {
     const id = parseInt(e.target.id, 10);
     console.log(id);
     const updatedData = tableData.filter((_, index) => index !== id);
-    setTableData(updatedData);
-    // console.log(updatedData);
-    localStorage.setItem("data", JSON.stringify(updatedData));
+    if(tableData!==updatedData){
+      console.log("tabledata",tableData); 
+      setTableData(updatedData);
+      prevdata = updatedData;
+      // setnewStateData(updatedData);
+      
+      console.log("prevdata",prevdata);
+      
+      console.log("tabledatayy",updatedData);
+      
+    }
+    console.log("updatedData: ",updatedData);
+    // localStorage.setItem("data", JSON.stringify(updatedData));
+    // setTableData(updatedData);
     toast.success("Data has been successfully deleted!");
-    setValue(-1);       //setting value again to initial state(-1), so that inputs become empty when we delete currently being edited data
+    setValue(-1);//setting value again to initial state(-1), so that inputs become empty when we delete currently being edited data
+    
   };
 
   const handleEdit = (index) => { 
     setValue(index);
-    console.log(index);
+    console.log("index",index);
      Navigate('/');
+    //  console.log("dekho");
      
-
+    // setformdata(null);
   };
-  console.log("tableData",tableData);
-  console.log(typeof tableData);
+ 
   
   
 

@@ -1,51 +1,54 @@
 import React, { useState, useEffect } from "react";
 import {toast} from "react-hot-toast";
 
-function Form({value}) {
-  const [formdata, setformdata] = useState({
-    price: "",
-    date: "",
-    title: "",
-    category: "",
-  });
-  console.log("form page par index of the row",value);
-  const [tableData, setTableData] = useState( JSON.parse(localStorage.getItem("data") || "[]"));
-  useEffect(()=>{
-    if(value > -1){
-    const prefilled = JSON.parse(localStorage.getItem("data") || "[]");
-    console.log(prefilled[value]);
-    if(prefilled[value]!==undefined){
-      setformdata(prefilled[value]);
-    }
-  }
-  }, [value])
+function Form({value,setValue,newStateData,setnewStateData,setTableData,tableData,prevdata,formdata,setformdata}) {
+  // const [StateData,setStateData] = useState("");
+
+  // console.log("form page par index of the row",value);
+  // const [tableData, setTableData] = useState( JSON.parse(localStorage.getItem("data") || "[]"));
+ 
+  
+ 
   
   
   const setPrice = (e) => {
     setformdata({ ...formdata, price: e.target.value });
   };
-  const getDate = (e) => {
+  const setDate = (e) => {
     setformdata({ ...formdata, date: e.target.value });
   };
-  const getTitle = (e) => {
+  const setTitle = (e) => {
     setformdata({ ...formdata, title: e.target.value });
   };
-  const getCategory = (e) => {
+  const setCategory = (e) => {
     setformdata({ ...formdata, category: e.target.value });
   };
-
+    // console.log("formdata: ",formdata);
+    
   const saveData = (e) => {
     e.preventDefault();
-    let prevdata = JSON.parse(localStorage.getItem("data") || "[]");
+    // let newarray = formdata;
+    // console.log("newarray",newarray);
+    
+    // let prevdata = JSON.parse(localStorage.getItem("data") || "[]");
+
+    console.log("prevdata",prevdata);
+    
+    
     if(value > -1){
       prevdata[value] = formdata;
     }
     else{
       prevdata.push(formdata);
     }
-    localStorage.setItem("data", JSON.stringify(prevdata));
-
+    // localStorage.setItem("data", JSON.stringify(prevdata));
+    
+    // setnewStateData(prevdata);
+    // console.log("StateData: ",StateData);
+    setValue(-1);
+   
     setTableData(prevdata); 
+
 
     setformdata({
       price: "",
@@ -53,6 +56,8 @@ function Form({value}) {
       title: "",
       category: "",
     });
+    console.log("hain");
+    
     toast.success("Your data has been saved successfully!")
   };
 
@@ -88,7 +93,7 @@ function Form({value}) {
       className="w-full p-3 mb-4 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
       required
       value={formdata.date}
-      onChange={getDate}
+      onChange={setDate}
     />
 
     <label htmlFor="title" className="w-full mb-2 text-gray-300 font-semibold">
@@ -101,17 +106,17 @@ function Form({value}) {
       className="w-full p-3 mb-4 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
       value={formdata.title}
       required
-      onChange={getTitle} 
+      onChange={setTitle} 
     />
 
     <label htmlFor="category" className="w-full mb-2 text-gray-300 font-semibold">
       Category:
     </label>
     <select
-      onChange={getCategory}
+      onChange={setCategory}
       id="options"
       name="options"
-      value={formdata.category}
+      value={formdata.category} required
       className="w-full p-3 mb-4 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
     >
       <option value="" disabled selected hidden>
