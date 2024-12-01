@@ -4,12 +4,13 @@ import './App.css';
 import Form from './components/Form';
 import DataPage from './components/DataPage';
 import { Toaster } from 'react-hot-toast';
+// import { setExpensesInBackend,getExpensesFromBackend } from './components/services/backend';
+import {getExpensesFromBackend, setExpensesInBackend} from './services/backend'
+
 
 function App() {
-  // const Navigate = useNavigate();
   const [value, setvalue] = useState(-1);
   const [tableData, setTableData] = useState([]);
-  
   const [formdata, setformdata] = useState({
     price: "",
     date: "",
@@ -17,26 +18,26 @@ function App() {
     category: "",
   });
   const prevdata = [...tableData];   //removing dependency of localStorage
-  let prefilled = prevdata;
 
   (useEffect(() => {
+   const prefilled = prevdata;
     if (value > -1) {
-      // const prefilled = JSON.parse(localStorage.getItem("data") || "[]");
       console.log("prefilled", prefilled);
-      console.log(typeof prefilled);
-
       console.log("prevdata", prevdata);
-      console.log(typeof prevdata);
-      
       console.log(prefilled[value]);
       if (prefilled[value] !== undefined) {
         setformdata(prefilled[value]);
       }
-      console.log("hello");
-
-
     }
-  }, [value]))
+  },[value]))
+
+  useEffect(() => {
+    getExpensesFromBackend().then(formdata => setTableData(formdata));
+  }, []);
+
+  useEffect(() => {
+    setExpensesInBackend(tableData).then(() => console.log("Saved expenses successfully!"));
+  }, [tableData]);
  
 
   return (

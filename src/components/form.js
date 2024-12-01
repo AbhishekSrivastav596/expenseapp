@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {toast} from "react-hot-toast";
 
-function Form({value,setValue,newStateData,setnewStateData,setTableData,tableData,prevdata,formdata,setformdata}) {
-  // const [StateData,setStateData] = useState("");
-
+function Form({value,setValue,setTableData,prevdata,formdata,setformdata}) {
+  
   // console.log("form page par index of the row",value);
-  // const [tableData, setTableData] = useState( JSON.parse(localStorage.getItem("data") || "[]"));
  
-  
- 
-  
-  
   const setPrice = (e) => {
     setformdata({ ...formdata, price: e.target.value });
   };
@@ -23,17 +17,13 @@ function Form({value,setValue,newStateData,setnewStateData,setTableData,tableDat
   const setCategory = (e) => {
     setformdata({ ...formdata, category: e.target.value });
   };
-    // console.log("formdata: ",formdata);
-    
+
   const saveData = (e) => {
     e.preventDefault();
-    // let newarray = formdata;
-    // console.log("newarray",newarray);
     
     // let prevdata = JSON.parse(localStorage.getItem("data") || "[]");
 
     console.log("prevdata",prevdata);
-    
     
     if(value > -1){
       prevdata[value] = formdata;
@@ -41,15 +31,12 @@ function Form({value,setValue,newStateData,setnewStateData,setTableData,tableDat
     else{
       prevdata.push(formdata);
     }
+
     // localStorage.setItem("data", JSON.stringify(prevdata));
-    
     // setnewStateData(prevdata);
     // console.log("StateData: ",StateData);
     setValue(-1);
-   
     setTableData(prevdata); 
-
-
     setformdata({
       price: "",
       date: "",
