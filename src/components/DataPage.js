@@ -1,86 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import Card from './Card';
+import Table from './Table';
 
-function DataPage({setValue,tableData,setTableData,setformdata}) {
+function DataPage({ setValue, tableData, setTableData, setformdata, showData, setshowData }) {
   const Navigate = useNavigate();
 
-  const handleDelete = (e) => {
-    const id = parseInt(e.target.id, 10);
-    console.log(id);
-    const updatedData = tableData.filter((_, index) => index !== id);    
-      setTableData(updatedData);
-      setformdata(updatedData)
-      console.log("tabledata",tableData); 
-    console.log("updatedData: ",updatedData);
-    // localStorage.setItem("data", JSON.stringify(updatedData));
-    // setTableData(updatedData);
+  const handleDelete = (index) => {
+    const updatedData = tableData.filter((_, i) => i !== index);
+    setTableData(updatedData);
+    setformdata(updatedData);
     toast.success("Data has been successfully deleted!");
-    setValue(-1);//setting value again to initial state(-1), so that inputs become empty when we delete currently being edited data
-    setTableData(updatedData)
+    setValue(-1); // Reset the value to clear input
   };
 
-  const handleEdit = (index) => { 
-    setValue(index);
-    console.log("index",index);
-     Navigate('/');
-    //  console.log("dekho");
-     
-    // setformdata(null);
+  const handleEdit = (index) => {
+    setValue(index); // Set the value to the index being edited
+    Navigate('/');
   };
- 
-  
-  
+
+  const toggleView = () => {
+    setshowData((prevShowData) => !prevShowData); // Toggle showData state
+  };
 
   return (
-    <div className="flex flex-col items-center p-6 bg-gray-50 min-h-screen">
-      <h3 className="text-2xl font-bold text-blue-600 mb-6">View Your Expenses</h3>
-      <table className="table-auto border-collapse border border-gray-300 w-full max-w-2xl text-left mb-8">
-        <thead>
-          <tr className="bg-gray-700">
-            <th className="border border-gray-300 px-6 py-4 text-lg font-medium text-white">Price</th>
-            <th className="border border-gray-300 px-6 py-4 text-lg font-medium text-white">Date</th>
-            <th className="border border-gray-300 px-6 py-4 text-lg font-medium text-white">Title</th>
-            <th className="border border-gray-300 px-6 py-4 text-lg font-medium text-white">Category</th>
-            <th className="border border-gray-300 px-6 py-4 text-lg font-medium text-white">Delete</th>
-            <th className="border border-gray-300 px-6 py-4 text-lg font-medium text-white">Edit</th>
-          </tr>
-        </thead>
-    <tbody>
-  {tableData.length > 0 ? (
-    tableData.map((item, index) => (
-      <tr key={index} className="hover:bg-blue-100 transition">
-        <td className="border border-gray-300 px-6 py-4 text-gray-700">{item.price}</td>
-        <td className="border border-gray-300 px-6 py-4 text-gray-700">{item.date}</td>
-        <td className="border border-gray-300 px-6 py-4 text-gray-700">{item.title}</td>
-        <td className="border border-gray-300 px-6 py-4 text-gray-700">{item.category}</td>
-        <td className="border border-gray-300 px-6 py-4 text-center">
-          <button
-            id={index} 
-            onClick={handleDelete} 
-            className="bg-red-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-blue-500 transition"
-          >
-            Delete
-          </button>
-       
-          
-        </td>
-        <td className="border border-gray-300 px-6 py-4 text-center"><button className="bg-green-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-blue-500 transition" onClick={()=>handleEdit(index)} >Edit</button></td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td
-        colSpan="5"
-        className="border border-gray-300 px-6 py-4 text-center text-gray-700 font-medium"
-      >
-        No data available
-      </td>
-    </tr>
-  )}
-</tbody>
+    <div className="p-6 bg-gray-50 min-h-screen">
+      <h1 className="text-2xl font-bold text-blue-600 mb-4 text-center">Manage Your Expenses</h1>
+      
+     
+      <div className="flex justify-center mb-6">
+        <button
+          onClick={toggleView}
+          className="bg-blue-500 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-600 transition"
+        >
+          {showData ? 'Switch to Table View' : 'Switch to Card View'}
+        </button>
+      </div>
 
-      </table>
+      {/* Display Card or Table based on showData */}
+      {showData ? (
+        <Card
+          tableData={tableData}
+          delete_expense={handleDelete}
+          edit_expense={handleEdit}
+        />
+      ) : (
+        <Table
+          tableData={tableData}
+          delete_expense={handleDelete}
+          edit_expense={handleEdit}
+        />
+      )}
     </div>
   );
 }

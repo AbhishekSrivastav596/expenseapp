@@ -3,11 +3,10 @@ import { BrowserRouter as Router, Route, Routes, Link, BrowserRouter, useNavigat
 import './App.css';
 import Form from './components/Form';
 import DataPage from './components/DataPage';
+import Card from './components/Card'
 import { Toaster } from 'react-hot-toast';
-// import { setExpensesInBackend,getExpensesFromBackend } from './components/services/backend';
 import {getExpensesFromBackend, setExpensesInBackend} from './services/backend'
-
-
+ 
 function App() {
   const [value, setvalue] = useState(-1);
   const [tableData, setTableData] = useState([]);
@@ -17,6 +16,7 @@ function App() {
     title: "",
     category: "",
   });
+  const [showData,setshowData] = useState(true);
   const prevdata = [...tableData];   //removing dependency of localStorage
 
   (useEffect(() => {
@@ -34,7 +34,7 @@ function App() {
   useEffect(() => {
     getExpensesFromBackend().then(formdata => setTableData(formdata));
   }, []);
-
+  
   useEffect(() => {
     setExpensesInBackend(tableData).then(() => console.log("Saved expenses successfully!"));
   }, [tableData]);
@@ -57,12 +57,25 @@ function App() {
                 <li>
                   <Link to="/view-data" className="text-blue-400 hover:text-white">View Data</Link>
                 </li>
+                
               </ul>
             </div>
           </nav>
           <Routes>
             <Route path="/" element={<Form value={value} setValue={setvalue} tableData={tableData} setTableData={setTableData} prevdata={prevdata} formdata={formdata} setformdata={setformdata} />} />
-            <Route path="/view-data" element={<DataPage  setValue={setvalue} tableData={tableData} setTableData={setTableData} prevdata={prevdata} formdata={formdata} setformdata={setformdata} />} />
+            <Route
+  path="/view-data"
+  element={
+    <DataPage
+      setValue={setvalue}
+      tableData={tableData}
+      setTableData={setTableData}
+      setformdata={setformdata}
+      showData={showData}
+      setshowData={setshowData} 
+    />
+  }
+/>
           </Routes>
         </div>
       </Router>
